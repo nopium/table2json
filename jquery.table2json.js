@@ -75,8 +75,13 @@
         };
 
         bigtable.options = options || { guess: true};
+        var what;
+        if( $(this).length>0 )
+        {
+            what = $(this);
+        }
 
-        $('table', html || $("body") ).each( bigtable.parseTableRecursive );
+        ( what || $('table', html || $("body") )).each( bigtable.parseTableRecursive );
         bigtable.sortEm();
         bigtable.rows = [];
         bigtable.applyDefinition( );

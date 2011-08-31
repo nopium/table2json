@@ -14,35 +14,51 @@
 </head>
 <body>
 
-<h1 id="qunit-header">QUnit example</h1>
+<h1 id="qunit-header">QUnit cases</h1>
  <h2 id="qunit-banner"></h2>
  <div id="qunit-testrunner-toolbar"></div>
  <h2 id="qunit-userAgent"></h2>
  <ol id="qunit-tests"></ol>
- <div id="qunit-fixture">test markup, will be hidden</div>
+ <div id="qunit-fixture">
+    <div id="container">
+        <table id="two-rows">
+            <tr><td>1</td></tr>
+            <tr><td>2</td></tr>
+        </table>
+    </div>
+    <table id="three-rows">
+    <tr><td>header 1</td><td>Русский заголовок с пробелами 2</td></tr>
+    <tr><td>21</td><td>22</td></tr>
+    <tr><td>31</td><td>32</td></tr>
+    </table>
+</div>
 
-<table id="two-rows">
-<tr><td>1</td></tr>
-<tr><td>2</td></tr>
-</table>
 
-<table id="three-rows">
-<tr><td>header 1</td><td>Русский заголовок с пробелами 2</td></tr>
-<tr><td>21</td><td>22</td></tr>
-<tr><td>31</td><td>32</td></tr>
-</table>
-
-
-console.log( $.fn.table2json() );
 <script>
     function runTests()
     {
-        
-        test("json", function(){
+        module("Guessing");
+        test("call without arguments", function(){
             var result = $.fn.table2json();
-            ok( result.length>0, " not empty" );
+            ok( result.length===3, " not empty" );
             
-            
+            ok( result[0]["header 1"] === "header 1", "zero row" );
+            ok( result[1]["header 1"] === "21", "first row" );
+            ok( result[2]["Русский заголовок с пробелами 2"] === "32", "second row" );
+        });
+
+        test("call with table selector", function(){
+            var result = $("#two-rows").table2json();           
+            ok( result.length===2, " not empty" );
+            ok( result[0]["1"]==="1", "same cell" );
+        });
+
+        test("call with non-table selector (container)", function(){
+            var result = $("#container").table2json();       
+            ok( result.length===2, " not empty" );
+            ok( result[0]["1"]==="1", "1 same cell" );
+            ok( result[1]["1"]==="2", "2 same cell" );
+            console.log(result);
         });
     }
 </script>
